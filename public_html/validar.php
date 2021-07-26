@@ -11,6 +11,9 @@ $resultado=mysqli_query($conexion,$consulta);
 
 $filas=mysqli_fetch_array($resultado);
 
+$privilegio=$filas['tipo_usuario_idtipo_usuario'];
+$_SESSION['tipo_usuario_idtipo_usuario']=$privilegio;
+
 if($filas['tipo_usuario_idtipo_usuario']==1){ //administrador 
     header("location:admin.php");
 
@@ -30,4 +33,5 @@ else{
     <?php
 }
 mysqli_free_result($resultado);
+
 mysqli_close($conexion);

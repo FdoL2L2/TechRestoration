@@ -13,7 +13,15 @@ if($conexion->connect_errno){
     die("LA CONEXION HA FALLADO" . $conexion->connect_errno);
 }
 session_start();
+if ($_SESSION["tipo_usuario_idtipo_usuario"] ==  "3" ) {
 
+} else if ($_SESSION["tipo_usuario_idtipo_usuario"] ==  "1"){
+  
+} else {
+header("Location: index.php");
+session_destroy();
+exit();
+}
 ?>
   <head>
 	  <link rel="shortcut icon" href="favicon.ico" />
@@ -48,36 +56,11 @@ session_start();
       <div class="sidebar-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" href="#">
+            <a class="nav-link active" href="index.php">
               <span data-feather="home"></span>
               Inicio <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="recepcionista.php">
-              <span data-feather="users"></span>
-              Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Galería
-            </a>
-          </li>
-         <!-- <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Personal
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reporte
-            </a>
-          </li> -->
-         
         </ul>
       </div>
     </nav>
@@ -92,8 +75,7 @@ session_start();
 
       <div class="in-flex" id="text1">
 
-      <form class="row g-3 needs-validation" novalidate method="POST">
-
+      <form class="row g-3 needs-validation" novalidate method="POST" enctype="multipart/form-data">
 
     <div class="container-md">
   <div class="col-md-4">
@@ -146,7 +128,12 @@ session_start();
         <div class="form-group">
     <label for="exampleFormControlTextarea1">Daño Reportado y observaciones</label>
     <textarea name="comentarios" class="form-control" id="exampleFormControlTextarea1" rows="7"></textarea>
-  </div>    
+  </div> 
+  <div class="form-group">
+  <label for="exampleFormControlTextarea1">Imagen Producto</label>
+  <input type="file" class="form-control" id="image" name="foto" multiple>
+</div>
+
     </div>    
        
   <div class="botones">
@@ -155,7 +142,10 @@ session_start();
 </div>
 
 </form>
+<?php
 
+echo "<input type='button' class='btn btn-dark'value='Atras' onClick='history.go(-2);'>";
+?>
       <div class="container-fluid pb-0 mb-0 justify-content-center text-light ">
         <br><br><br><br>
     <footer>
@@ -217,7 +207,7 @@ session_start();
 </html>
 <?php
 
-if(isset($_POST['enviar'])){
+if(isset($_POST['enviar'])){  
   
   $tipoequipo = $_POST["tipo_producto"];
   $marca = $_POST["marca_producto"];
@@ -227,8 +217,16 @@ if(isset($_POST['enviar'])){
   $fecha_entrada = $_POST["fecha_entrada"];
   $idcliente = $_POST["cliente_idcliente"];
   $comentarios = $_POST["comentarios"];
+  if (isset($_FILES['foto']['name'])) {
+    $tipoArchivo = $_FILES['foto']['type'];
+    $nombreArchivo = $_FILES['foto']['name'];
+    $tamanoArchivo = $_FILES['foto']['size'];
+    $imagenSubida = fopen($_FILES['foto']['tmp_name'], 'r');
+    $binariosImagen = fread($imagenSubida, $tamanoArchivo);
+    $binariosImagen = mysqli_escape_string($conexion, $binariosImagen);
+  }
 
-  $insertarDatos = "INSERT INTO ficha_tecnica VALUES ('idficha_tecnica','$tipoequipo','$n_serie', '$marca', '$comentarios','$fecha_entrada','','$modelo', '$idcliente', '$estado', '') ";
+  $insertarDatos = "INSERT INTO ficha_tecnica VALUES ('idficha_tecnica','$tipoequipo','$n_serie', '$marca', '$comentarios','$fecha_entrada','','$modelo', '$idcliente', '$estado', '', '" . $nombreArchivo . "','" . $binariosImagen . "','" . $tipoArchivo . "') ";
 
   $ejecutarInsertar = mysqli_query($conexion,$insertarDatos);
   

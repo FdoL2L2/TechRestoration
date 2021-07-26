@@ -13,7 +13,15 @@ if($conexion->connect_errno){
     die("LA CONEXION HA FALLADO" . $conexion->connect_errno);
 }
 session_start();
+if ($_SESSION["tipo_usuario_idtipo_usuario"] ==  "3" ) {
 
+} else if ($_SESSION["tipo_usuario_idtipo_usuario"] ==  "1"){
+  
+} else {
+header("Location: index.php");
+session_destroy();
+exit();
+}
 ?>
   <head>
 	  <link rel="shortcut icon" href="favicon.ico" />
@@ -48,36 +56,11 @@ session_start();
       <div class="sidebar-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active" href="#">
+            <a class="nav-link active" href="index.php">
               <span data-feather="home"></span>
               Inicio <span class="sr-only">(current)</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="recepcionista.php">
-              <span data-feather="users"></span>
-              Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Galería
-            </a>
-          </li>
-         <!-- <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Personal
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reporte
-            </a>
-          </li> -->
-         
         </ul>
       </div>
     </nav>
@@ -91,7 +74,7 @@ session_start();
       </div>
 
       <div class="in-flex" id="text1">
-
+      <input class="form-control" id="myInput" type="text" placeholder="Buscar...">
       <form class="row g-3 needs-validation" method="POST" action="gestionarcliente.php">
 
     <div class="container-md">
@@ -108,7 +91,7 @@ session_start();
       <th scope="col"></th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="myTable">
   <?php
 
 $sql = "SELECT * FROM cliente";
@@ -135,6 +118,9 @@ while ($mostrar=mysqli_fetch_array($result)){
     </div>
 
 </form>
+<?php
+echo "<input type='button' class='btn btn-dark' value='Atras' onClick='history.go(-1);'>";
+?>
       <div class="container-fluid pb-0 mb-0 justify-content-center text-light ">
         <br><br><br><br>
     <footer>
@@ -185,12 +171,13 @@ while ($mostrar=mysqli_fetch_array($result)){
 </div>
 
 
-      
+    
 <script src="js/jquery-3.5.1.min.js"></script>
       <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>');</script>
       <script src="js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
         <script src="js/dashboard.js"></script>
+        <script src="js/filtrar.js"></script> 
   </body>
 </html>
